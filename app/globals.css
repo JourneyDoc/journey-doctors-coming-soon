@@ -1,0 +1,119 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: linear-gradient(135deg, #5552d6, #6b68ff, #8a88ff);
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+  color: var(--foreground);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: white;
+  text-align: center;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient {
+  animation: gradient 15s ease infinite;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+  }
+
+  .container {
+    padding: 20px !important;
+    max-width: 100% !important;
+  }
+
+  h1 {
+    font-size: 2.5rem !important;
+  }
+
+  h2 {
+    font-size: 2rem !important;
+  }
+
+  .text-lg {
+    font-size: 1rem !important;
+  }
+
+  .text-base {
+    font-size: 0.9rem !important;
+  }
+
+  .text-xl {
+    font-size: 1.25rem !important;
+  }
+
+  .text-4xl {
+    font-size: 2rem !important;
+  }
+
+  .countdown-item {
+    margin: 0 10px 10px !important;
+    min-width: 60px !important;
+  }
+
+  .countdown-number {
+    font-size: 1.8rem !important;
+    padding: 10px !important;
+    min-width: 60px !important;
+  }
+
+  .countdown-label {
+    font-size: 0.8rem !important;
+  }
+
+  .waitlist-form {
+    padding: 20px !important;
+  }
+
+  .form-input {
+    padding: 10px !important;
+    font-size: 0.9rem !important;
+  }
+
+  .feature {
+    width: 140px !important;
+    padding: 15px !important;
+  }
+
+  .feature-icon {
+    font-size: 1.5rem !important;
+  }
+
+  .feature-text {
+    font-size: 0.9rem !important;
+  }
+}
