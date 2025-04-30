@@ -1,44 +1,67 @@
+import clientPromise from '@/lib/mongo'
+
 export async function POST(req) {
-    try {
-      // Get form data from request
-      const data = await req.json();
-      
-      // Validate form data
-      if (!data.fullName || !data.email || !data.role) {
-        return new Response(
-          JSON.stringify({ error: 'Missing required fields' }),
-          { status: 400, headers: { 'Content-Type': 'application/json' } }
-        );
-      }
-      
-      // Normally, you would store this in a database
-      // For now, we'll just log it and return a success response
-      console.log('Waitlist submission:', data);
-      
-      // You could also try to send it to Formspree as a backup
-      try {
-        const formspreeResponse = await fetch('https://formspree.io/f/xpwdqlaw', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(data)
-        });
-        console.log('Formspree response:', formspreeResponse.status);
-      } catch (formspreeError) {
-        console.error('Failed to submit to Formspree:', formspreeError);
-        // Continue anyway since we're storing in localStorage
-      }
-      
-      return new Response(
-        JSON.stringify({ success: true, message: 'Successfully joined waitlist' }),
-        { status: 200, headers: { 'Content-Type': 'application/json' } }
-      );
-    } catch (error) {
-      console.error('Error processing waitlist submission:', error);
-      return new Response(
-        JSON.stringify({ error: 'Failed to process submission' }),
-        { status: 500, headers: { 'Content-Type': 'application/json' } }
-      );
+  try {
+    const data = await req.json()
+    const { fullName, email, role } = data
+
+    // Validate input
+    if (!fullName || !email || !role) {
+      return new Response(JSON.stringify({ error: 'Missing required fields' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      })
     }
+
+    // Connect to MongoDB
+    const client = await clientPromise
+    const db = client.db('JourneyDoctors')
+    const collection = db.collection('JourneyDoctors Waitlist')
+
+    // Save submission
+    await collection.insertOne({
+      fullName,
+      email,
+      role,
+      createdAt: new Date()
+    })
+
+    return new Response(
+      JSON.stringify({ success: true, message: 'Successfully joined waitlist' }),
+      {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    )
+  } catch (error) {
+    console.error('Error saving to MongoDB:', error)
+    return new Response(
+      JSON.stringify({ error: 'Internal server error' }),
+      {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    )
   }
+}
+
+export async function GET() {
+  try {
+    const client = await clientPromise
+    const db = client.db('JourneyDoctors')
+    const collection = db.collection('JourneyDoctors Waitlist')
+
+    const entries = await collection.find({}).sort({ createdAt: -1 }).toArray()
+
+    return new Response(JSON.stringify(entries), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
+    })
+  } catch (error) {
+    console.error('Error fetching entries:', error)
+    return new Response(JSON.stringify({ error: 'Failed to fetch entries' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    })
+  }
+}
