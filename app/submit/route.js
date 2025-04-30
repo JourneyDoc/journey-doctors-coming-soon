@@ -13,12 +13,10 @@ export async function POST(req) {
       })
     }
 
-    // Connect to MongoDB
     const client = await clientPromise
     const db = client.db('JourneyDoctors')
     const collection = db.collection('JourneyDoctors Waitlist')
 
-    // Save submission
     await collection.insertOne({
       fullName,
       email,
@@ -49,7 +47,7 @@ export async function GET() {
   try {
     const client = await clientPromise
     const db = client.db('JourneyDoctors')
-    const collection = db.collection('JourneyDoctors.JourneyDoctors Waitlist')
+    const collection = db.collection('JourneyDoctors Waitlist') // ✅ corrected
 
     const entries = await collection.find({}).sort({ createdAt: -1 }).toArray()
 
@@ -59,9 +57,12 @@ export async function GET() {
     })
   } catch (error) {
     console.error('Error fetching entries:', error)
-    return new Response(JSON.stringify({ error: 'Failed to fetch entries' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' }
-    })
+    return new Response(
+      JSON.stringify({ error: 'Failed to fetch entries' }),
+      {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    )
   }
 }
