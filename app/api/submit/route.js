@@ -46,8 +46,9 @@ export async function GET() {
     const collection = db.collection('JourneyDoctors Waitlist')
 
     const entries = await collection.find({}).sort({ createdAt: -1 }).toArray()
-
-    return new Response(JSON.stringify(entries), {
+    
+    // Make sure we're returning a valid JSON array
+    return new Response(JSON.stringify(entries || []), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
     })

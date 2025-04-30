@@ -11,7 +11,13 @@ export default function AdminPage() {
   useEffect(() => {
     async function fetchEntries() {
       try {
-        const res = await fetch('/submit')
+        // Fix: Added the /api prefix to the fetch URL
+        const res = await fetch('/api/submit')
+        
+        if (!res.ok) {
+          throw new Error(`Failed to load entries: ${res.status}`)
+        }
+        
         const data = await res.json()
 
         if (!Array.isArray(data)) {
@@ -31,6 +37,8 @@ export default function AdminPage() {
   }, [])
 
   function exportCSV() {
+    if (entries.length === 0) return
+
     const header = ['Full Name', 'Email', 'Role', 'Date']
     const rows = entries.map(entry => [
       entry.fullName,
@@ -58,7 +66,8 @@ export default function AdminPage() {
           <div className="flex gap-3">
             <button
               onClick={exportCSV}
-              className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md font-medium"
+              disabled={entries.length === 0}
+              className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md font-medium disabled:bg-green-300 disabled:cursor-not-allowed"
             >
               Export CSV
             </button>
