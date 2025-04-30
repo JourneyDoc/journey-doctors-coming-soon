@@ -6,15 +6,22 @@ import Link from 'next/link'
 export default function AdminPage() {
   const [entries, setEntries] = useState([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     async function fetchEntries() {
       try {
         const res = await fetch('/submit')
         const data = await res.json()
-        setEntries(data)
+
+        if (Array.isArray(data)) {
+          setEntries(data)
+        } else {
+          setError('Invalid data received')
+        }
       } catch (error) {
         console.error('Failed to load entries:', error)
+        setError('Failed to load entries')
       } finally {
         setLoading(false)
       }
@@ -66,6 +73,8 @@ export default function AdminPage() {
 
         {loading ? (
           <p>Loading entries...</p>
+        ) : error ? (
+          <p className="text-red-500">{error}</p>
         ) : entries.length === 0 ? (
           <p>No entries yet</p>
         ) : (
@@ -80,14 +89,17 @@ export default function AdminPage() {
                 </tr>
               </thead>
               <tbody>
-                {entries.map((entry, i) => (
-                  <tr key={i} className="border-t border-white/10">
-                    <td className="p-2">{entry.fullName}</td>
-                    <td className="p-2">{entry.email}</td>
-                    <td className="p-2">{entry.role}</td>
-                    <td className="p-2">{new Date(entry.createdAt).toLocaleString()}</td>
-                  </tr>
-                ))}
+                {Array.isArray(entries) &&
+                  entries.map((entry, i) => (
+                    <tr key={i} className="border-t border-white/10">
+                      <td className="p-2">{entry.fullName}</td>
+                      <td className="p-2">{entry.email}</td>
+                      <td className="p-2">{entry.role}</td>
+                      <td className="p-2">
+                        {new Date(entry.createdAt).toLocaleString()}
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
             <p className="text-sm mt-4 text-white/80">Total Entries: {entries.length}</p>

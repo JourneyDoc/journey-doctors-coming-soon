@@ -49,7 +49,7 @@ export async function GET() {
   try {
     const client = await clientPromise
     const db = client.db('JourneyDoctors')
-    const collection = db.collection('JourneyDoctors Waitlist')
+    const collection = db.collection('JourneyDoctors.JourneyDoctors Waitlist')
 
     const entries = await collection.find({}).sort({ createdAt: -1 }).toArray()
 
