@@ -14,14 +14,14 @@ export default function AdminPage() {
         const res = await fetch('/submit')
         const data = await res.json()
 
-        if (Array.isArray(data)) {
-          setEntries(data)
-        } else {
-          setError('Invalid data received')
+        if (!Array.isArray(data)) {
+          throw new Error('Invalid data received')
         }
-      } catch (error) {
-        console.error('Failed to load entries:', error)
-        setError('Failed to load entries')
+
+        setEntries(data)
+      } catch (err) {
+        console.error('Failed to load entries:', err)
+        setError('Invalid data received')
       } finally {
         setLoading(false)
       }
@@ -74,7 +74,7 @@ export default function AdminPage() {
         {loading ? (
           <p>Loading entries...</p>
         ) : error ? (
-          <p className="text-red-500">{error}</p>
+          <p className="text-red-400">{error}</p>
         ) : entries.length === 0 ? (
           <p>No entries yet</p>
         ) : (
@@ -89,17 +89,14 @@ export default function AdminPage() {
                 </tr>
               </thead>
               <tbody>
-                {Array.isArray(entries) &&
-                  entries.map((entry, i) => (
-                    <tr key={i} className="border-t border-white/10">
-                      <td className="p-2">{entry.fullName}</td>
-                      <td className="p-2">{entry.email}</td>
-                      <td className="p-2">{entry.role}</td>
-                      <td className="p-2">
-                        {new Date(entry.createdAt).toLocaleString()}
-                      </td>
-                    </tr>
-                  ))}
+                {entries.map((entry, i) => (
+                  <tr key={i} className="border-t border-white/10">
+                    <td className="p-2">{entry.fullName}</td>
+                    <td className="p-2">{entry.email}</td>
+                    <td className="p-2">{entry.role}</td>
+                    <td className="p-2">{new Date(entry.createdAt).toLocaleString()}</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
             <p className="text-sm mt-4 text-white/80">Total Entries: {entries.length}</p>

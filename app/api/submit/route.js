@@ -5,7 +5,6 @@ export async function POST(req) {
     const data = await req.json()
     const { fullName, email, role } = data
 
-    // Validate input
     if (!fullName || !email || !role) {
       return new Response(JSON.stringify({ error: 'Missing required fields' }), {
         status: 400,
@@ -33,13 +32,10 @@ export async function POST(req) {
     )
   } catch (error) {
     console.error('Error saving to MongoDB:', error)
-    return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
-      {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' }
-      }
-    )
+    return new Response(JSON.stringify({ error: 'Internal server error' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    })
   }
 }
 
@@ -47,7 +43,7 @@ export async function GET() {
   try {
     const client = await clientPromise
     const db = client.db('JourneyDoctors')
-    const collection = db.collection('JourneyDoctors Waitlist') // ✅ corrected
+    const collection = db.collection('JourneyDoctors Waitlist')
 
     const entries = await collection.find({}).sort({ createdAt: -1 }).toArray()
 
@@ -57,12 +53,9 @@ export async function GET() {
     })
   } catch (error) {
     console.error('Error fetching entries:', error)
-    return new Response(
-      JSON.stringify({ error: 'Failed to fetch entries' }),
-      {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' }
-      }
-    )
+    return new Response(JSON.stringify({ error: 'Failed to fetch entries' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    })
   }
 }

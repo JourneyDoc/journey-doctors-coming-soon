@@ -20,7 +20,7 @@ export default function WaitlistForm() {
     const role = form.role.value
 
     try {
-      const res = await fetch('/submit', {
+      const res = await fetch('/api/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ fullName, email, role })
@@ -79,8 +79,9 @@ export default function WaitlistForm() {
             name="role"
             className="w-full p-4 rounded-lg bg-gray-800 text-white"
             required
+            defaultValue=""
           >
-            <option value="" disabled selected>Select your role</option>
+            <option value="" disabled>Select your role</option>
             <option value="patient">Patient</option>
             <option value="doctor">Doctor</option>
             <option value="nurse">Nurse</option>
