@@ -59,21 +59,21 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen p-8 bg-gradient-to-b from-purple-400 to-purple-200 text-white">
-      <div className="bg-white/20 rounded-xl p-6 max-w-4xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold">Waitlist Entries</h1>
+    <div className="min-h-screen p-8 bg-gradient-to-br from-indigo-600 via-purple-700 to-purple-900 text-white">
+      <div className="bg-white/10 backdrop-blur-xl rounded-3xl shadow-2xl p-8 max-w-4xl mx-auto">
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-3xl font-bold">Waitlist Entries</h1>
           <div className="flex gap-3">
             <button
               onClick={exportCSV}
               disabled={entries.length === 0}
-              className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md font-medium disabled:bg-green-300 disabled:cursor-not-allowed"
+              className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-xl font-medium disabled:bg-green-300 disabled:cursor-not-allowed shadow-lg transition-colors"
             >
               Export CSV
             </button>
             <Link
               href="/"
-              className="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-md font-medium"
+              className="bg-white text-indigo-600 px-6 py-3 rounded-xl font-medium hover:bg-opacity-90 transition-colors shadow-lg"
             >
               Back to Site
             </Link>
@@ -81,34 +81,34 @@ export default function AdminPage() {
         </div>
 
         {loading ? (
-          <p>Loading entries...</p>
+          <div className="py-8 text-center text-xl">Loading entries...</div>
         ) : error ? (
-          <p className="text-red-400">{error}</p>
+          <div className="py-8 text-center text-red-400 bg-red-400/10 rounded-2xl">{error}</div>
         ) : entries.length === 0 ? (
-          <p>No entries yet</p>
+          <div className="py-8 text-center text-xl">No entries yet</div>
         ) : (
-          <div className="overflow-auto">
-            <table className="min-w-full text-left text-sm">
-              <thead>
+          <div className="overflow-auto rounded-2xl bg-white/5 backdrop-blur-lg">
+            <table className="min-w-full text-left">
+              <thead className="bg-white/10">
                 <tr>
-                  <th className="p-2">Full Name</th>
-                  <th className="p-2">Email</th>
-                  <th className="p-2">Role</th>
-                  <th className="p-2">Submitted At</th>
+                  <th className="px-4 py-3 font-semibold">Full Name</th>
+                  <th className="px-4 py-3 font-semibold">Email</th>
+                  <th className="px-4 py-3 font-semibold">Role</th>
+                  <th className="px-4 py-3 font-semibold">Submitted At</th>
                 </tr>
               </thead>
               <tbody>
                 {entries.map((entry, i) => (
-                  <tr key={i} className="border-t border-white/10">
-                    <td className="p-2">{entry.fullName}</td>
-                    <td className="p-2">{entry.email}</td>
-                    <td className="p-2">{entry.role}</td>
-                    <td className="p-2">{new Date(entry.createdAt).toLocaleString()}</td>
+                  <tr key={i} className="border-t border-white/10 hover:bg-white/5 transition-colors">
+                    <td className="px-4 py-3">{entry.fullName}</td>
+                    <td className="px-4 py-3">{entry.email}</td>
+                    <td className="px-4 py-3">{entry.role}</td>
+                    <td className="px-4 py-3">{new Date(entry.createdAt).toLocaleString()}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
-            <p className="text-sm mt-4 text-white/80">Total Entries: {entries.length}</p>
+            <div className="px-4 py-3 bg-white/5 text-sm">Total Entries: {entries.length}</div>
           </div>
         )}
       </div>

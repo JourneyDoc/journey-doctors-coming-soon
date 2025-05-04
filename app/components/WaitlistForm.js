@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import axios from 'axios'
 import Button from './Button'
 
 export default function WaitlistForm() {
@@ -20,20 +21,19 @@ export default function WaitlistForm() {
     const role = form.role.value
 
     try {
-      const res = await fetch('/api/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ fullName, email, role })
+      const response = await axios.post('/api/submit', {
+        fullName,
+        email,
+        role
       })
 
-      if (!res.ok) {
-        const result = await res.json()
-        throw new Error(result.error || 'Something went wrong')
+      if (response.status === 200) {
+        router.push('/thankyou')
+      } else {
+        throw new Error(response.data.error || 'Something went wrong')
       }
-
-      router.push('/thankyou')
     } catch (err) {
-      setError(err.message)
+      setError(err.response?.data?.error || err.message || 'Something went wrong')
     } finally {
       setLoading(false)
     }

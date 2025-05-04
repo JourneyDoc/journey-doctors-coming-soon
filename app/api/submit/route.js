@@ -13,8 +13,17 @@ export async function POST(req) {
     }
 
     const client = await clientPromise
-    const db = client.db('JourneyDoctors')
+    const db = client.db('JourneyDoctorComingSoon')
     const collection = db.collection('JourneyDoctors Waitlist')
+
+    // Check for existing email
+    const existingUser = await collection.findOne({ email });
+    if (existingUser) {
+      return new Response(JSON.stringify({ error: 'Email already registered' }), {
+        status: 409,
+        headers: { 'Content-Type': 'application/json' }
+      })
+    }
 
     await collection.insertOne({
       fullName,
@@ -42,12 +51,11 @@ export async function POST(req) {
 export async function GET() {
   try {
     const client = await clientPromise
-    const db = client.db('JourneyDoctors')
+    const db = client.db('JourneyDoctorComingSoon')
     const collection = db.collection('JourneyDoctors Waitlist')
 
     const entries = await collection.find({}).sort({ createdAt: -1 }).toArray()
     
-    // Make sure we're returning a valid JSON array
     return new Response(JSON.stringify(entries || []), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
