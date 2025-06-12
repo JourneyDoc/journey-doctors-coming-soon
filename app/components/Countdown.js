@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 
 export default function Countdown() {
   const [timeLeft, setTimeLeft] = useState({
-    days: '45',
+    days: '46',
     hours: '00',
     minutes: '00',
     seconds: '00'
@@ -14,7 +14,7 @@ export default function Countdown() {
     // Set a fixed launch date 45 days from today
     const today = new Date()
     const launchDate = new Date(today)
-    launchDate.setDate(today.getDate() + 45)
+    launchDate.setDate(today.getDate() + 46)
     
     // Store the launch date in localStorage so it persists across page refreshes
     if (!localStorage.getItem('launchDate')) {
